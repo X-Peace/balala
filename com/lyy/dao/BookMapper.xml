@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.lyy.dao.BookMapper">
+	<select id="selectBookCount" parameterType="fenye" resultType="int">
+		select count(bid) from book b,bc c
+		<where>
+				<if test="book.bname!=null and book.bname!=''">
+					and bname like "%"#{book.bname}"%"
+				</if>
+				<if test="book.startbsale!=null and book.startbsale!=''">
+					and bsale &gt; #{book.startbsale}
+				</if>
+				<if test="book.endbsale!=null and book.endbsale!=''">
+					and bsale &lt; #{book.endbsale}
+				</if>
+				
+				<if test="book.bc.bcid!=null and book.bc.bcid!=''">
+					and c.bcid=#{book.bc.bcid}
+				</if>
+				 	and b.bcid=c.bcid
+			</where>
+	</select>
+
+
+
+
+	<resultMap type="Book" id="BookInfo">
+		<id column="bid" property="bid"/>
+		<result column="bname" property="bname"/>
+		<result column="bsale" property="bsale"/>
+		<result column="bzuoze" property="bzuoze"/>
+		<result column="bjieshao" property="bjieshao"/>
+		<result column="bcid" property="bc.bcid"/>
+		<result column="bcname" property="bc.bcname"/>
+	</resultMap>
+
+
+
+
+	<select id="selectBook" parameterType="fenye" resultMap="BookInfo">
+		SELECT b.bid,b.bname,b.bsale,b.bzuoze,b.bjieshao,c.bcid,c.bcname FROM book b,bc c WHERE b.bcid=c.bcid
+		
+		<where>
+				<if test="book.bname!=null and book.bname!=''">
+					and bname like "%"#{book.bname}"%"
+				</if>
+				<if test="book.startbsale!=null and book.startbsale!=''">
+					and bsale &gt; #{book.startbsale}
+				</if>
+				<if test="book.endbsale!=null and book.endbsale!=''">
+					and bsale &lt; #{book.endbsale}
+				</if>
+				
+				<if test="book.bc.bcid!=null and book.bc.bcid!=''">
+					and c.bcid=#{book.bc.bcid}
+				</if>
+			</where>
+		
+	</select>
+	<select id="getBc" resultType="bc">
+	
+		select bcid,bcname from bc
+	</select>
+
+</mapper>
